@@ -11,14 +11,14 @@ var mysql = require('mysql');
 
 
 
- const db = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'crm', 
-  port:3306,
+//  const db = mysql.createConnection({
+//   host     : 'localhost',
+//   user     : 'root',
+//   password : '',
+//   database : 'crm', 
+//   port:3306,
  
-});
+// });
 
 
 
