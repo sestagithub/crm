@@ -143,7 +143,7 @@ let query = db.query(sql, async(err, result) => {
 
 
 
-app.get('/',authenticateUser,(req,res)=>{
+app.get('/',(req,res)=>{
 
   let sql = `SELECT SUM(Amount) AS total_amount,COUNT(*) AS total_donor FROM donors LEFT JOIN donations ON donors.donor_id =donations.donor `;
   let query = db.query(sql, async(err, result) => {
@@ -170,7 +170,7 @@ app.get('/',authenticateUser,(req,res)=>{
 
 /////////////////DONATION////////////////////
 
-app.get('/donations',authenticateUser, (req,res)=>{
+app.get('/donations', (req,res)=>{
     let sql = "SELECT * FROM donations INNER JOIN donors ON donations.donor = donors.donor_id";
     let query = db.query(sql, async(err, result) => {
         if(err) throw err;
@@ -185,7 +185,7 @@ app.get('/donations',authenticateUser, (req,res)=>{
 })
 
 
-app.post('/donations',authenticateUser, (req,res)=>{
+app.post('/donations', (req,res)=>{
   const {amount,currency,donor,date,source,purpose} = req.body;
 
   let post ={donor,Amount:amount,currency,donation_date:date,source,purpose}
@@ -199,7 +199,7 @@ app.post('/donations',authenticateUser, (req,res)=>{
     })
 })
 
-app.post('/donations/delete',authenticateUser, (req,res)=>{
+app.post('/donations/delete', (req,res)=>{
 
   const {donation_id }=req.body;
   // console.log(donation_id)
@@ -219,7 +219,7 @@ app.post('/donations/delete',authenticateUser, (req,res)=>{
 
 
 
-app.post('/donation-receipt',authenticateUser, (req,res)=>{
+app.post('/donation-receipt', (req,res)=>{
   var {id} = req.body;
 
   let sql = "SELECT * FROM donations INNER JOIN donors ON donations.donor = donors.donor_id WHERE donation_id ="+id;
@@ -290,7 +290,7 @@ app.post('/donation-receipt',authenticateUser, (req,res)=>{
 //////BENIFICARY//////////
 
 
-app.get('/benificary',authenticateUser, (req,res)=>{
+app.get('/benificary', (req,res)=>{
   let sql = "SELECT benificary_id,beni_address,beni_name,beni_phone,SUM(rcv_amount) AS total_amount,COUNT(*) AS count FROM benificary LEFT JOIN benificary_amount ON benificary.benificary_id = benificary_amount.benificary_ GROUP BY benificary_amount.benificary_ ";
   let query = db.query(sql, async(err, result) => {
       if(err) throw err;
@@ -301,7 +301,7 @@ app.get('/benificary',authenticateUser, (req,res)=>{
   
 })
 
-app.post('/benificary',authenticateUser, (req,res)=>{
+app.post('/benificary', (req,res)=>{
   const {beni_name,beni_address,beni_phone} = req.body;
 
 
@@ -318,7 +318,7 @@ app.post('/benificary',authenticateUser, (req,res)=>{
 })
 
 
-app.get('/benificary/:id',authenticateUser, (req,res)=>{
+app.get('/benificary/:id', (req,res)=>{
   let id = req.params.id;
   let sql = `SELECT * FROM benificary LEFT JOIN benificary_amount ON benificary.benificary_id=benificary_amount.benificary_ LEFT JOIN donors ON benificary_amount.donor_=donors.donor_id   WHERE benificary_id =`+id;
   let query = db.query(sql, async(err, result) => {
@@ -336,7 +336,7 @@ app.get('/benificary/:id',authenticateUser, (req,res)=>{
     })
 })
 
-app.post('/beni_donation',authenticateUser, (req,res)=>{
+app.post('/beni_donation', (req,res)=>{
   const {rcv_amount,rcv_date,donor_,benificary_} = req.body;
 
 
@@ -351,7 +351,7 @@ app.post('/beni_donation',authenticateUser, (req,res)=>{
     })
 })
 
-app.post('/benificary/delete',authenticateUser, (req,res)=>{
+app.post('/benificary/delete', (req,res)=>{
 
   const {benificary_id  }=req.body;
 
@@ -366,7 +366,7 @@ app.post('/benificary/delete',authenticateUser, (req,res)=>{
 })
 
 
-app.post('/beni_donation/delete',authenticateUser, (req,res)=>{
+app.post('/beni_donation/delete', (req,res)=>{
 
   const {ammount_id,benificary_id    }=req.body;
   console.log(benificary_id)
@@ -385,7 +385,7 @@ app.post('/beni_donation/delete',authenticateUser, (req,res)=>{
 
 ////////////DONORS///////////////
 
-app.get('/donors',authenticateUser, (req,res)=>{
+app.get('/donors', (req,res)=>{
     let sql = `SELECT DISTINCT newsletter_id,donor_id,etohop_date,foreign_donor,name,email,phone,address,date,SUM(Amount) AS total_amount,COUNT(*) AS count FROM donors LEFT JOIN donations ON donors.donor_id = donations.donor  LEFT JOIN newsletter ON donors.donor_id=newsletter.user_id LEFT JOIN etohop ON donors.donor_id=etohop.user_id  GROUP BY donations.donor ORDER BY total_amount DESC `;
     // let sql  = `SELECT donors.name,SUM(Amount) AS total FROM donations LEFT JOIN donors ON donations.donor = donors.donor_id GROUP BY donations.Amount  `;
     let query = db.query(sql, async(err, result) => {
@@ -397,7 +397,7 @@ app.get('/donors',authenticateUser, (req,res)=>{
    
 })
 
-app.post('/donors',authenticateUser, (req,res)=>{
+app.post('/donors', (req,res)=>{
   const {name,email,phone,address,assocated_date,foreign_donor} = req.body;
 
   let post ={name,email,phone,address,assocated_date,foreign_donor}
@@ -412,7 +412,7 @@ app.post('/donors',authenticateUser, (req,res)=>{
 
 })
 
-app.post('/donors/delete',authenticateUser, (req,res)=>{
+app.post('/donors/delete', (req,res)=>{
 
   const {donor_id  }=req.body;
   // console.log(donor_id )
@@ -431,7 +431,7 @@ app.post('/donors/delete',authenticateUser, (req,res)=>{
 
 
 
-app.get('/donors/:id',authenticateUser, (req,res)=>{
+app.get('/donors/:id', (req,res)=>{
     // console.log(req.params.id)
     var id = req.params.id;
     let sql = `SELECT * FROM donors LEFT JOIN newsletter ON donors.donor_id=newsletter.user_id LEFT JOIN annual_report ON donors.donor_id=annual_report.user_id  LEFT JOIN etohop ON donors.donor_id=etohop.user_id  WHERE donor_id = ${id} ORDER BY newsletter_id DESC`;
@@ -458,7 +458,7 @@ app.get('/donors/:id',authenticateUser, (req,res)=>{
       })
 })
 
-app.post('/newsletter',authenticateUser, (req,res)=>{
+app.post('/newsletter', (req,res)=>{
     var {email,sbuject,body,id,donor_id,email_id} = req.body;
 
     console.log(body)
@@ -509,7 +509,7 @@ app.post('/newsletter',authenticateUser, (req,res)=>{
 })
 
 
-app.post('/etohop',authenticateUser, (req,res)=>{
+app.post('/etohop', (req,res)=>{
   var {email,sbuject,body,id,donor_id} = req.body;
 
   var transporter = nodemailer.createTransport({
@@ -557,7 +557,7 @@ app.post('/etohop',authenticateUser, (req,res)=>{
     })
 })
 
-app.post('/annual-report',authenticateUser, (req,res)=>{
+app.post('/annual-report', (req,res)=>{
   var {email,sbuject,body,id,donor_id} = req.body;
 
   var transporter = nodemailer.createTransport({
@@ -622,7 +622,7 @@ app.post('/annual-report',authenticateUser, (req,res)=>{
 
 
 ///////CAMPAIGN/////////
-app.get('/campaigns',authenticateUser, (req,res)=>{
+app.get('/campaigns', (req,res)=>{
 
   let sql = 'SELECT * FROM campaigns';      
   let query = db.query(sql, (err, result) => {
@@ -635,14 +635,14 @@ app.get('/campaigns',authenticateUser, (req,res)=>{
 })
 
 
-app.get('/campaign',authenticateUser, (req,res)=>{
+app.get('/campaign', (req,res)=>{
   res.render('campaign')
 
 })
 
 
 /////////////BULK SMS.///////////
-app.get('/bulk',authenticateUser, (req,res)=>{
+app.get('/bulk', (req,res)=>{
 
   let sql = 'SELECT * FROM donors';      
   let query = db.query(sql, (err, result) => {
@@ -668,7 +668,7 @@ app.get('/bulk',authenticateUser, (req,res)=>{
 
 
 
-app.post('/bulk-newsletter',authenticateUser, (req,res)=>{
+app.post('/bulk-newsletter', (req,res)=>{
 
     var transporter = nodemailer.createTransport({
       service: 'gmail',
